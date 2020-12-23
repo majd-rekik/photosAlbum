@@ -63,16 +63,16 @@ function App() {
   const photoAdd = (event) => {
     setAddClicked(true);
   };
+
   const photoSup = (event) => {
-    event.preventDefault();
-    console.log(tableau.length);
     if (tableau.length !== 1) {
       tableau.splice(photoId, 1);
-      photoNext();
+      photoBefor();
     } else {
       setOpen(true);
     }
   };
+      
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -81,8 +81,6 @@ function App() {
     setOpen(false);
   };
   const saleh = (event) => {
-    event.preventDefault();
-
     tableau.push({
       photo: urlImage,
       label: label,
