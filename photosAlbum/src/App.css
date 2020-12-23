@@ -1,0 +1,81 @@
+.App {
+  text-align: center;
+  background-color: transparent;
+}
+.Container {
+  position: relative;
+  z-index: 1;
+}
+
+.Background {
+  opacity: 10px;
+  filter: blur(30px);
+  background-color: rgb(255, 255, 255);
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  z-index: -1;
+}
+.App-logo {
+  height: 50vh;
+  width: auto;
+}
+
+
+
+.card {
+  margin:3%;
+  width: 60vw;
+}
+
+.majd {
+  height: auto;
+  width: 100%;
+  font-family: sans-serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  justify-content: left;
+  color: white;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1rem;
+}
+.App-header {
+  background-color: #282c34;
+  width: 100%;
+  height: 10vh;
+  padding-right: 10%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+.App-footer {
+  position:fixed;
+  left:0px;
+  bottom:0px;
+  height:7vh;
+  width:100%;
+  padding-top: 1%;
+  justify-content: center;
+  background-color: #282c34;
+  color: white;
+  font-size: 1em;
+}
+
+
+.Befor {
+  justify-content: space-between;
+}
