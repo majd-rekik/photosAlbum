@@ -23,7 +23,7 @@
   z-index: -1;
 }
 .App-logo {
-  height: 50vh;
+  height: 40vh;
   width: auto;
 }
 
@@ -31,7 +31,7 @@
 
 .card {
   margin:3%;
-  width: 60vw;
+  width: 40vh;
 }
 
 .majd {

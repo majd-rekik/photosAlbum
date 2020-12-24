@@ -13,17 +13,21 @@ import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import axios from "axios";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+
+const BASE_URL = "https://dummyapi.io/data/api";
+const APP_ID = "5fe3cdf87b952d73bf676129";
 
 const tableau = [
   { photo: photo1, label: "Croatia: Pula" },
@@ -38,25 +42,41 @@ tableau.push({
     "https://www.visitberlin.de/system/files/styles/visitberlin_bleed_header_visitberlin_mobile_1x/private/image/BraTor_Fruehling_c_visitBerlin_Foto_DagmarSchwelle%20%284%29_DL_PPT.jpg?h=e5aec6c8&itok=Fxr3t1cm",
   label: "Germany: Berlin",
 });
-function App() {
+
+const App = () => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
   const [photoId, setPhotoId] = useState(0);
   const [addClicked, setAddClicked] = useState(false);
   const [urlImage, setUrlImage] = useState("");
   const [label, setLabel] = useState("");
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`${BASE_URL}/user`, { headers: { "app-id": APP_ID } })
+      .then(({ data }) => setData(data))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   const photoBefor = (event) => {
-    if (photoId === 0) {
-      setPhotoId(tableau.length - 1);
-    } else {
-      setPhotoId(photoId - 1);
+    if (data) {
+      if (photoId === 0) {
+        setPhotoId(data.data.length - 1);
+      } else {
+        setPhotoId(photoId - 1);
+      }
     }
   };
   const photoNext = (event) => {
-    if (photoId === tableau.length - 1) {
-      setPhotoId(0);
-    } else {
-      setPhotoId(photoId + 1);
+    if (data) {
+      if (photoId === data.data.length - 1) {
+        setPhotoId(0);
+      } else {
+        setPhotoId(photoId + 1);
+      }
     }
   };
 
@@ -65,14 +85,14 @@ function App() {
   };
 
   const photoSup = (event) => {
-    if (tableau.length !== 1) {
-      tableau.splice(photoId, 1);
+    if (data.data.length !== 1) {
+      data.data.splice(photoId, 1);
       photoBefor();
     } else {
       setOpen(true);
     }
   };
-      
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -81,9 +101,9 @@ function App() {
     setOpen(false);
   };
   const saleh = (event) => {
-    tableau.push({
-      photo: urlImage,
-      label: label,
+    data.data.push({
+      picture: urlImage,
+      lastName: label,
     });
     setAddClicked(false);
     setUrlImage("");
@@ -92,75 +112,92 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <div className="majd">L'album Photos de Majd </div>
-      </header>
-      <div
-        className="content"
-        style={{ backgroundImage: `url(${tableau[photoId].photo})` }}
-      >
-        <Card className="card">
-          <CardMedia className="App-logo" image={tableau[photoId].photo} />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {tableau[photoId].label}
-            </Typography>
-          </CardContent>
-          <CardActions className="Befor">
-            <IconButton onClick={photoBefor} aria-label="add an alarm">
-              <NavigateBeforeIcon fontSize="large" />
-            </IconButton>
+      {loading && "Loading..."}
+      {data && (
+        <div>
+          <header className="App-header">
+            <div className="majd">L'album Photos de Majd </div>
+          </header>
+          <div
+            className="content"
+            style={{
+              backgroundImage: `url(${data.data[photoId].picture})`,
+              backgroundSize: "cover",
+              overflow: "hidden",
+            }}
+          >
+            <Card className="card">
+              <CardMedia
+                className="App-logo"
+                image={data.data[photoId].picture}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {data.data[photoId].firstName + " "}
+                  {data.data[photoId].lastName}
+                </Typography>
+              </CardContent>
+              <CardActions className="Befor">
+                <IconButton onClick={photoBefor} aria-label="add an alarm">
+                  <NavigateBeforeIcon fontSize="large" />
+                </IconButton>
 
-            {addClicked === false && (
-              <div>
+                {addClicked === false && (
+                  <div>
+                    <IconButton
+                      onClick={photoAdd}
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                    >
+                      <AddToPhotosIcon fontSize="large" />
+                    </IconButton>
+                    <IconButton color="secondary" onClick={photoSup}>
+                      <HighlightOffIcon fontSize="large" />
+                    </IconButton>
+                  </div>
+                )}
+
+                {addClicked === true && (
+                  <form onSubmit={saleh} noValidate autoComplete="off">
+                    <TextField
+                      id="filled-basic"
+                      label="Url image"
+                      value={urlImage}
+                      onChange={(event) => setUrlImage(event.target.value)}
+                    />
+                    <TextField
+                      id="filled-basic"
+                      label="Label"
+                      value={label}
+                      onChange={(event) => setLabel(event.target.value)}
+                    />
+                    <Button type="submit" variant="contained" color="secondary">
+                      Add
+                    </Button>
+                  </form>
+                )}
+
                 <IconButton
-                  onClick={photoAdd}
-                  color="primary"
-                  aria-label="upload picture"
-                  component="span"
+                  aria-label="add to shopping cart"
+                  onClick={photoNext}
                 >
-                  <AddToPhotosIcon fontSize="large" />
+                  <NavigateNextIcon fontSize="large" />
                 </IconButton>
-                <IconButton color="secondary" onClick={photoSup}>
-                  <HighlightOffIcon fontSize="large" />
-                </IconButton>
-              </div>
-            )}
+              </CardActions>
+            </Card>
 
-            {addClicked === true && (
-              <form onSubmit={saleh} noValidate autoComplete="off">
-                <TextField
-                  id="filled-basic"
-                  label="Url image"
-                  value={urlImage}
-                  onChange={(event) => setUrlImage(event.target.value)}
-                />
-                <TextField
-                  id="filled-basic"
-                  label="Label"
-                  value={label}
-                  onChange={(event) => setLabel(event.target.value)}
-                />
-                <Button type="submit" variant="contained" color="secondary">
-                  Add
-                </Button>
-              </form>
-            )}
-
-            <IconButton aria-label="add to shopping cart" onClick={photoNext}>
-              <NavigateNextIcon fontSize="large" />
-            </IconButton>
-          </CardActions>
-        </Card>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error">
-            There is only one photo left
-          </Alert>
-        </Snackbar>
-      </div>
-      <footer className="App-footer">copywrites: Majd.Rekik</footer>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity="error">
+                There is only one photo left
+              </Alert>
+            </Snackbar>
+          </div>
+          <footer className="App-footer">copywrites: Majd.Rekik</footer>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
