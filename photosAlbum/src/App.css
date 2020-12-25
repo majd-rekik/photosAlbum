@@ -32,6 +32,8 @@
 .card {
   margin:3%;
   width: 40vh;
+  
+
 }
 
 .majd {
@@ -48,7 +50,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   padding-top: 1rem;
 }
 .App-header {

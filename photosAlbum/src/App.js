@@ -61,6 +61,8 @@ const App = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  if (data) console.log(data.data);
+
   const photoBefor = (event) => {
     if (data) {
       if (photoId === 0) {
@@ -83,7 +85,6 @@ const App = () => {
   const photoAdd = (event) => {
     setAddClicked(true);
   };
-
   const photoSup = (event) => {
     if (data.data.length !== 1) {
       data.data.splice(photoId, 1);
@@ -92,12 +93,10 @@ const App = () => {
       setOpen(true);
     }
   };
-
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
   const saleh = (event) => {
@@ -109,14 +108,13 @@ const App = () => {
     setUrlImage("");
     setLabel("");
   };
-
   return (
     <div className="App">
       {loading && "Loading..."}
       {data && (
         <div>
           <header className="App-header">
-            <div className="majd">L'album Photos de Majd </div>
+            <div className="majd">Data Base info </div>
           </header>
           <div
             className="content"
@@ -133,15 +131,26 @@ const App = () => {
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
-                  {data.data[photoId].firstName + " "}
+                  <strong>{`Title: `}</strong>
+                  {data.data[photoId].title}
+                </Typography>
+                <Typography gutterBottom variant="h5" component="h2">
+                  <strong>{`First Name: `}</strong>
+                  {data.data[photoId].firstName}
+                </Typography>
+                <Typography gutterBottom variant="h5" component="h2">
+                  <strong>{`Last Name: `}</strong>
                   {data.data[photoId].lastName}
+                </Typography>
+                <Typography gutterBottom variant="h5" component="h2">
+                  <strong>{`Email: `}</strong>
+                  {data.data[photoId].email}
                 </Typography>
               </CardContent>
               <CardActions className="Befor">
                 <IconButton onClick={photoBefor} aria-label="add an alarm">
                   <NavigateBeforeIcon fontSize="large" />
                 </IconButton>
-
                 {addClicked === false && (
                   <div>
                     <IconButton
@@ -157,7 +166,6 @@ const App = () => {
                     </IconButton>
                   </div>
                 )}
-
                 {addClicked === true && (
                   <form onSubmit={saleh} noValidate autoComplete="off">
                     <TextField
@@ -168,16 +176,28 @@ const App = () => {
                     />
                     <TextField
                       id="filled-basic"
-                      label="Label"
+                      label="firstName"
                       value={label}
                       onChange={(event) => setLabel(event.target.value)}
                     />
+                    <TextField
+                      id="filled-basic"
+                      label="lastName"
+                      value={label}
+                      onChange={(event) => setLabel(event.target.value)}
+                    />
+                    <TextField
+                      id="filled-basic"
+                      label="Email"
+                      value={label}
+                      onChange={(event) => setLabel(event.target.value)}
+                    />
+
                     <Button type="submit" variant="contained" color="secondary">
                       Add
                     </Button>
                   </form>
                 )}
-
                 <IconButton
                   aria-label="add to shopping cart"
                   onClick={photoNext}
@@ -186,7 +206,6 @@ const App = () => {
                 </IconButton>
               </CardActions>
             </Card>
-
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="error">
                 There is only one photo left
