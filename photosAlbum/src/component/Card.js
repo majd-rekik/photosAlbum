@@ -33,7 +33,6 @@ function Card1(){
   const [photoId, setPhotoId] = useState(0);
   const [addClicked, setAddClicked] = useState(false);
   const [urlImage, setUrlImage] = useState("");
-  const [label, setLabel] = useState("");
   const [open, setOpen] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -101,7 +100,6 @@ function Card1(){
     });
     setAddClicked(false);
     setUrlImage("");
-    setLabel("");
     setFirstName("");
     setLastName("");
     setEmail("");
@@ -114,7 +112,7 @@ function Card1(){
         <Card>
           <CardMedia className="App-logo" image={data.data[photoId].picture} />
           <CardContent className="">
-            <Typography gutterBottom variant="h5" component="h2">
+            <Typography className="typo1" gutterBottom variant="h5" component="h2">
               <strong>{`Title: `}</strong>
               {data.data[photoId].title}
             </Typography>
