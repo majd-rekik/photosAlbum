@@ -43,7 +43,7 @@
   justify-content: left;
   color: white;
 }
-.content {
+.content, .addcard{
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -161,4 +161,8 @@
 
 .typo1 strong {
   color: #11ABB0;
+}
+.UserCard {
+  margin: 2em;
+  padding: 1em;
 }
